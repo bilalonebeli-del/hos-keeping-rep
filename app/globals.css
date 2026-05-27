@@ -51,3 +51,36 @@
     padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
   }
 }
+
+@keyframes intro-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes intro-pulse {
+  0%,
+  100% {
+    box-shadow: 0 10px 15px -3px rgb(13 148 136 / 0.25), 0 4px 6px -4px rgb(13 148 136 / 0.2);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 20px 25px -5px rgb(13 148 136 / 0.35), 0 8px 10px -6px rgb(13 148 136 / 0.25);
+    transform: scale(1.02);
+  }
+}
+
+@layer utilities {
+  .animate-intro-fade-in {
+    animation: intro-fade-in 1.2s ease-out forwards;
+  }
+
+  .animate-intro-pulse {
+    animation: intro-pulse 2s ease-in-out infinite;
+  }
+}

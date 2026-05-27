@@ -1,5 +1,5 @@
-import { ReportForm } from "@/components/form/report-form";
+import { HomePageClient } from "@/components/intro/home-page-client";
 
 export default function HomePage() {
-  return <ReportForm />;
+  return <HomePageClient />;
 }
