@@ -112,7 +112,7 @@ export function ReportForm() {
       try {
         const { data: staffData, error: staffError } = await supabase
           .from("staff")
-          .select("id,name,employee_id")
+          .select("id,name")
           .order("name");
 
         const { data: storesData, error: storesError } = await supabase
@@ -127,7 +127,11 @@ export function ReportForm() {
         if (staffError) {
           toast.error(`Staff load failed: ${staffError.message}`);
         } else {
-          setStaff(staffData ?? []);
+          const normalizedStaff = (staffData ?? []).map((s) => ({
+            ...s,
+            employee_id: "",
+          }));
+          setStaff(normalizedStaff);
         }
 
         if (storesError) {
@@ -259,7 +263,7 @@ export function ReportForm() {
               <SelectContent>
                 {staff.map((s) => (
                   <SelectItem key={s.id} value={s.id}>
-                    {s.name} - {s.employee_id}
+                    {s.name}
                   </SelectItem>
                 ))}
               </SelectContent>
