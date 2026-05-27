@@ -14,7 +14,7 @@ export function InstallPrompt() {
       <div className="flex items-center gap-3 rounded-lg border bg-card p-4 shadow-lg">
         <div className="flex-1 text-sm">
           <p className="font-medium">Add to Home Screen</p>
-          <p className="text-muted-foreground">Install for quick access like an app</p>
+          <p className="text-neutral-600">Install for quick access like an app</p>
         </div>
         <Button size="icon" variant="ghost" onClick={dismiss} aria-label="Dismiss">
           <X className="h-5 w-5" />

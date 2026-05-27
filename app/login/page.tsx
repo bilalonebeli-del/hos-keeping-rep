@@ -49,7 +49,7 @@ export default function LoginPage() {
         <CardContent>
           {sent ? (
             <div className="text-center space-y-4 py-4">
-              <Mail className="h-12 w-12 mx-auto text-primary" />
+              <Mail className="mx-auto h-12 w-12 text-primary-600" />
               <p className="text-base">Check your email for the login link.</p>
               <Button variant="outline" onClick={() => setSent(false)} className="min-h-touch">
                 Send again

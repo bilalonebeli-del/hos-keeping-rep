@@ -244,7 +244,7 @@ export function ReportForm() {
     return (
       <div className="space-y-4 p-4 animate-pulse">
         {[1, 2, 3, 4, 5].map((i) => (
-          <div key={i} className="h-11 rounded-md bg-muted" />
+          <div key={i} className="h-11 rounded-md bg-neutral-100" />
         ))}
       </div>
     );
@@ -270,14 +270,14 @@ export function ReportForm() {
                 ))}
               </SelectContent>
             </Select>
-            {errors.staff_id && <p className="text-sm text-destructive">{errors.staff_id.message}</p>}
+            {errors.staff_id && <p className="text-sm text-error">{errors.staff_id.message}</p>}
           </div>
 
           {/* Date */}
           <div className="space-y-2">
             <Label htmlFor="date">Date</Label>
             <Input id="date" type="date" className="text-lg" {...register("date")} />
-            {errors.date && <p className="text-sm text-destructive">{errors.date.message}</p>}
+            {errors.date && <p className="text-sm text-error">{errors.date.message}</p>}
           </div>
 
           {/* Shift */}
@@ -292,8 +292,8 @@ export function ReportForm() {
                   className={cn(
                     "min-h-touch rounded-lg border-2 px-2 py-3 text-base font-medium transition-colors",
                     shift === s
-                      ? "border-primary bg-primary text-primary-foreground"
-                      : "border-input bg-background hover:bg-accent"
+                      ? "border-primary-600 bg-primary-600 text-white"
+                      : "border-neutral-200 bg-surface hover:bg-neutral-50"
                   )}
                 >
                   {s}
@@ -324,7 +324,7 @@ export function ReportForm() {
                 ))}
               </SelectContent>
             </Select>
-            {errors.store_id && <p className="text-sm text-destructive">{errors.store_id.message}</p>}
+            {errors.store_id && <p className="text-sm text-error">{errors.store_id.message}</p>}
           </div>
 
           {/* Time */}
@@ -338,8 +338,8 @@ export function ReportForm() {
               <Input id="time_out" type="time" className="text-2xl font-semibold h-14" {...register("time_out")} />
             </div>
           </div>
-          {errors.time_out && <p className="text-sm text-destructive">{errors.time_out.message}</p>}
-          <p className="text-center text-lg font-medium text-primary">
+          {errors.time_out && <p className="text-sm text-error">{errors.time_out.message}</p>}
+          <p className="text-center text-lg font-medium text-primary-600">
             Time elapsed: {elapsed} minutes
           </p>
 
@@ -350,7 +350,7 @@ export function ReportForm() {
               {TASK_FIELDS.map(({ key, label }) => (
                 <label
                   key={key}
-                  className="flex min-h-touch items-center gap-3 rounded-lg border p-3 cursor-pointer hover:bg-accent/50 has-[:checked]:border-primary has-[:checked]:bg-primary/5"
+                  className="flex min-h-touch cursor-pointer items-center gap-3 rounded-lg border border-neutral-200 p-3 hover:bg-neutral-50 has-[:checked]:border-primary-600 has-[:checked]:bg-primary-50"
                 >
                   <Checkbox
                     checked={watch(key)}
@@ -377,7 +377,7 @@ export function ReportForm() {
         </div>
 
         {/* Fixed submit */}
-        <div className="fixed bottom-14 inset-x-0 z-30 border-t bg-background/95 backdrop-blur p-4 md:static md:border-0 md:mt-4 md:max-w-4xl md:mx-auto">
+        <div className="fixed bottom-14 inset-x-0 z-30 border-t border-neutral-200 bg-surface/95 p-4 backdrop-blur md:static md:mx-auto md:mt-4 md:max-w-4xl md:border-0">
           <Button type="submit" className="w-full h-12 text-lg" disabled={submitting}>
             {submitting ? (
               <>
@@ -394,7 +394,7 @@ export function ReportForm() {
       <Sheet open={successOpen} onOpenChange={setSuccessOpen}>
         <SheetContent side="bottom" className="rounded-t-xl">
           <SheetHeader>
-            <SheetTitle className="text-center text-2xl text-primary">Submitted!</SheetTitle>
+            <SheetTitle className="text-center text-2xl text-primary-600">Submitted!</SheetTitle>
             <SheetDescription className="text-center">
               Your housekeeping report has been saved successfully.
             </SheetDescription>

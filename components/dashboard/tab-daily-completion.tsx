@@ -44,7 +44,7 @@ export default function TabDailyCompletion({ reports, stores, date }: Props) {
               <Badge variant={pct >= 75 ? "success" : pct >= 50 ? "warning" : "secondary"}>
                 {pct}% complete
               </Badge>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-sm text-neutral-600">
                 {reportCount} reports · {totalTasks} tasks
               </span>
             </div>

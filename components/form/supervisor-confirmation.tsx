@@ -32,8 +32,8 @@ export function SupervisorConfirmation({ register, errors, setValue, signatureRe
   };
 
   return (
-    <div className="space-y-4 rounded-lg border-2 border-primary/20 bg-primary/5 p-4">
-      <h3 className="text-lg font-semibold text-primary">Supervisor Confirmation</h3>
+    <div className="space-y-4 rounded-xl border border-primary-100 bg-primary-50 p-4 shadow-card">
+      <h3 className="text-lg font-semibold text-primary-700">Supervisor Confirmation</h3>
 
       <div className="space-y-2">
         <Label htmlFor="supervisor_name">Supervisor Name</Label>
@@ -44,7 +44,7 @@ export function SupervisorConfirmation({ register, errors, setValue, signatureRe
           {...register("supervisor_name")}
         />
         {errors.supervisor_name && (
-          <p className="text-sm text-destructive">{errors.supervisor_name.message}</p>
+          <p className="text-sm text-error">{errors.supervisor_name.message}</p>
         )}
       </div>
 
@@ -57,7 +57,7 @@ export function SupervisorConfirmation({ register, errors, setValue, signatureRe
           {...register("supervisor_employee_id")}
         />
         {errors.supervisor_employee_id && (
-          <p className="text-sm text-destructive">{errors.supervisor_employee_id.message}</p>
+          <p className="text-sm text-error">{errors.supervisor_employee_id.message}</p>
         )}
       </div>
 
@@ -75,22 +75,22 @@ export function SupervisorConfirmation({ register, errors, setValue, signatureRe
             Clear
           </Button>
         </div>
-        <div className="rounded-md border border-input bg-white overflow-hidden">
+        <div className="overflow-hidden rounded-lg border border-neutral-200 bg-surface">
           <SignatureCanvas
             ref={signatureRef}
             onEnd={captureSignature}
             canvasProps={{
-              className: "w-full h-40 touch-none",
+              className: "h-40 w-full touch-none",
               "aria-label": "Supervisor signature pad",
             }}
-            penColor="#0f766e"
-            backgroundColor="rgb(255, 255, 255)"
+            penColor="#0d9488"
+            backgroundColor="#ffffff"
           />
         </div>
         {errors.supervisor_signature && (
-          <p className="text-sm text-destructive">{errors.supervisor_signature.message}</p>
+          <p className="text-sm text-error">{errors.supervisor_signature.message}</p>
         )}
-        <p className="text-xs text-muted-foreground">Sign with finger or stylus</p>
+        <p className="text-xs text-neutral-600">Sign with finger or stylus</p>
       </div>
 
       <div className="space-y-2">

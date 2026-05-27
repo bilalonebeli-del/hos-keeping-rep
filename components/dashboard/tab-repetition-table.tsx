@@ -33,15 +33,15 @@ export default function TabRepetitionTable({ reports, date }: Props) {
   }, [reports, date]);
 
   if (rows.length === 0) {
-    return <p className="text-muted-foreground text-center py-8">No reports for this date.</p>;
+    return <p className="text-neutral-600 text-center py-8">No reports for this date.</p>;
   }
 
   return (
     <div className="overflow-x-auto -mx-4 px-4">
       <table className="w-full min-w-[640px] text-sm border-collapse">
         <thead>
-          <tr className="border-b bg-muted/50">
-            <th className="sticky left-0 bg-muted/50 p-3 text-left font-medium">Store</th>
+          <tr className="border-b bg-neutral-50">
+            <th className="sticky left-0 bg-neutral-50 p-3 text-left font-medium">Store</th>
             {TASK_FIELDS.map((t) => (
               <th key={t.key} className="p-3 text-center font-medium whitespace-nowrap">
                 {t.label.split(" ")[0]}
@@ -52,7 +52,7 @@ export default function TabRepetitionTable({ reports, date }: Props) {
         <tbody>
           {rows.map((row) => (
             <tr key={row.storeId} className="border-b">
-              <td className="sticky left-0 bg-background p-3 font-medium">
+              <td className="sticky left-0 bg-surface p-3 font-medium">
                 <span className="block truncate max-w-[200px]">{row.name}</span>
               </td>
               {TASK_FIELDS.map((t) => (

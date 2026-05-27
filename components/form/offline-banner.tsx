@@ -11,7 +11,7 @@ export function OfflineBanner() {
   if (isOnline && pending === 0) return null;
 
   return (
-    <div className="bg-amber-500 text-amber-950 px-4 py-2 text-sm font-medium flex items-center gap-2 justify-center">
+    <div className="flex items-center justify-center gap-2 bg-warning-50 px-4 py-2 text-sm font-medium text-warning">
       <WifiOff className="h-4 w-4 shrink-0" />
       {!isOnline ? (
         <span>Offline — report will sync when back online</span>

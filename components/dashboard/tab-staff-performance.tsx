@@ -43,7 +43,7 @@ export default function TabStaffPerformance({ reports, staff, from, to }: Props)
   };
 
   if (rows.length === 0) {
-    return <p className="text-muted-foreground text-center py-8">No performance data in range.</p>;
+    return <p className="text-neutral-600 text-center py-8">No performance data in range.</p>;
   }
 
   return (
@@ -56,8 +56,8 @@ export default function TabStaffPerformance({ reports, staff, from, to }: Props)
       </div>
       <div className="overflow-x-auto -mx-4 px-4 max-h-[500px] overflow-y-auto">
         <table className="w-full min-w-[640px] text-sm border-collapse">
-          <thead className="sticky top-0 bg-background z-10">
-            <tr className="border-b bg-muted/50">
+          <thead className="sticky top-0 z-10 bg-surface">
+            <tr className="border-b bg-neutral-50">
               <th className="p-3 text-left font-medium">Staff</th>
               <th className="p-3 text-left font-medium">Employee ID</th>
               <th className="p-3 text-right font-medium">Reports</th>

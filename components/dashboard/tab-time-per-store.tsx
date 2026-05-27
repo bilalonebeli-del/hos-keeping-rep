@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import type { ReportWithRelations } from "@/lib/dashboard-queries";
 import { TASK_FIELDS } from "@/lib/types";
+import { CHART_COLORS } from "@/lib/chart-colors";
 
 type Props = {
   reports: ReportWithRelations[];
@@ -44,10 +45,10 @@ export default function TabTimePerStore({ reports, date }: Props) {
   }, [reports, date]);
 
   if (data.length === 0) {
-    return <p className="text-muted-foreground text-center py-8">No reports for this date.</p>;
+    return <p className="text-neutral-600 text-center py-8">No reports for this date.</p>;
   }
 
-  const colors = ["#0f766e", "#14b8a6", "#2dd4bf", "#5eead4", "#99f6e4", "#115e59", "#134e4a", "#042f2e"];
+  const colors = CHART_COLORS;
 
   return (
     <div className="overflow-x-auto -mx-4 px-4">

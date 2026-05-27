@@ -4,14 +4,13 @@ import { useMemo } from "react";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import type { ReportWithRelations } from "@/lib/dashboard-queries";
 import { TASK_FIELDS } from "@/lib/types";
+import { CHART_COLORS } from "@/lib/chart-colors";
 import { format, startOfMonth, endOfMonth } from "date-fns";
 
 type Props = {
   reports: ReportWithRelations[];
   month: string;
 };
-
-const COLORS = ["#0f766e", "#14b8a6", "#2dd4bf", "#5eead4", "#99f6e4", "#115e59", "#134e4a", "#042f2e"];
 
 export default function TabMonthlyTasks({ reports, month }: Props) {
   const data = useMemo(() => {
@@ -29,7 +28,7 @@ export default function TabMonthlyTasks({ reports, month }: Props) {
   }, [reports, month]);
 
   if (data.length === 0) {
-    return <p className="text-muted-foreground text-center py-8">No task data for this month.</p>;
+    return <p className="text-neutral-600 text-center py-8">No task data for this month.</p>;
   }
 
   return (
@@ -38,7 +37,7 @@ export default function TabMonthlyTasks({ reports, month }: Props) {
         <PieChart>
           <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label>
             {data.map((_, i) => (
-              <Cell key={i} fill={COLORS[i % COLORS.length]} />
+              <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
             ))}
           </Pie>
           <Tooltip />

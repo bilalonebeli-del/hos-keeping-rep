@@ -19,7 +19,7 @@ export default function TabDailyStaff({ reports, staffId, date }: Props) {
   );
 
   if (staffReports.length === 0) {
-    return <p className="text-muted-foreground text-center py-8">No reports found.</p>;
+    return <p className="text-neutral-600 text-center py-8">No reports found.</p>;
   }
 
   return (
@@ -28,7 +28,7 @@ export default function TabDailyStaff({ reports, staffId, date }: Props) {
         <Card key={r.id}>
           <CardHeader className="pb-2">
             <CardTitle className="text-base">{r.staff.name}</CardTitle>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-neutral-600">
               {r.store.name} · {r.shift} · {r.time_in.slice(11, 16)}–{r.time_out.slice(11, 16)}
             </p>
           </CardHeader>
@@ -46,7 +46,7 @@ export default function TabDailyStaff({ reports, staffId, date }: Props) {
                 <Badge variant="outline">No tasks marked</Badge>
               )}
             </div>
-            {r.remarks && <p className="text-sm text-muted-foreground">{r.remarks}</p>}
+            {r.remarks && <p className="text-sm text-neutral-600">{r.remarks}</p>}
           </CardContent>
         </Card>
       ))}

@@ -34,12 +34,12 @@ export default function TabMonthlyHeatmap({ reports }: Props) {
   }, [reports, month]);
 
   const level = (count: number) => {
-    if (count === 0) return "bg-muted";
+    if (count === 0) return "bg-neutral-100";
     const ratio = count / heatmap.max;
-    if (ratio > 0.75) return "bg-teal-700";
-    if (ratio > 0.5) return "bg-teal-500";
-    if (ratio > 0.25) return "bg-teal-300";
-    return "bg-teal-100";
+    if (ratio > 0.75) return "bg-primary-700";
+    if (ratio > 0.5) return "bg-primary-500";
+    if (ratio > 0.25) return "bg-primary-100";
+    return "bg-primary-50";
   };
 
   return (
@@ -54,7 +54,7 @@ export default function TabMonthlyHeatmap({ reports }: Props) {
         </Button>
       </div>
 
-      <div className="grid grid-cols-7 gap-1 text-center text-xs text-muted-foreground mb-2">
+      <div className="grid grid-cols-7 gap-1 text-center text-xs text-neutral-600 mb-2">
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
           <div key={d}>{d}</div>
         ))}

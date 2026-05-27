@@ -22,33 +22,33 @@ export function SplashScreen({
   return (
     <div
       className={cn(
-        "fixed inset-0 z-[100] flex items-center justify-center bg-white px-6",
+        "fixed inset-0 z-[100] flex items-center justify-center bg-surface px-6",
         "transition-opacity duration-300 ease-out",
         exiting ? "opacity-0 pointer-events-none" : "opacity-100",
         !exiting && "animate-intro-fade-in"
       )}
       aria-hidden={exiting}
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-teal-50/40 via-white to-white pointer-events-none" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 h-1 w-32 rounded-full bg-[#0d9488]/30" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-primary-50/60 via-white to-white" />
+      <div className="absolute top-0 left-1/2 h-1 w-32 -translate-x-1/2 rounded-full bg-primary-600/30" />
 
       <div className="relative mx-auto flex w-full max-w-md flex-col items-center text-center">
-        <div className="mb-8 flex h-20 w-20 items-center justify-center rounded-2xl border border-teal-100 bg-teal-50/80 shadow-sm">
-          <SparkleMopIcon className="h-10 w-10 text-[#0d9488]" />
+        <div className="mb-8 flex h-20 w-20 items-center justify-center rounded-2xl border border-primary-100 bg-primary-50 shadow-card">
+          <SparkleMopIcon className="h-10 w-10 text-primary-600" />
         </div>
 
-        <h1 className="text-4xl font-bold tracking-tight text-slate-900">
+        <h1 className="text-4xl font-bold tracking-tight text-neutral-900">
           Housekeeping Reports
         </h1>
-        <p className="mt-3 text-lg text-slate-600">Daily operations, simplified</p>
+        <p className="mt-3 text-lg text-neutral-600">Daily operations, simplified</p>
 
         <button
           type="button"
           onClick={onStart}
           disabled={!buttonEnabled}
           className={cn(
-            "mt-10 w-full max-w-xs rounded-xl bg-teal-600 px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-teal-600/25 transition-all",
-            "hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2",
+            "mt-10 w-full max-w-xs rounded-xl bg-primary-600 px-8 py-4 text-lg font-semibold text-white shadow-sm transition-all",
+            "hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2",
             "disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none",
             buttonPulse && buttonEnabled && "animate-intro-pulse"
           )}
@@ -56,7 +56,7 @@ export function SplashScreen({
           Start Report
         </button>
 
-        <p className="mt-8 text-sm text-slate-500">
+        <p className="mt-8 text-sm text-neutral-600">
           Track shifts • Log tasks • Generate PDFs
         </p>
       </div>

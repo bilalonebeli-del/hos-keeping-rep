@@ -21,8 +21,8 @@ export function printReport(data: PrintData) {
 
   const html = `<!DOCTYPE html><html><head><title>Housekeeping Report</title>
 <style>body{font-family:system-ui,sans-serif;padding:24px;max-width:600px;margin:0 auto}
-h1{font-size:20px;color:#0f766e}table{width:100%;border-collapse:collapse;margin-top:16px}
-td,th{padding:8px;border:1px solid #ddd;text-align:left}th{background:#f0fdfa}</style></head><body>
+h1{font-size:20px;color:#0d9488}table{width:100%;border-collapse:collapse;margin-top:16px}
+td,th{padding:8px;border:1px solid #e2e8f0;text-align:left}th{background:#f0fdfa;color:#0f172a}</style></head><body>
 <h1>Daily Housekeeping Report</h1>
 <table>
 <tr><th>Staff</th><td>${staffLabel}</td></tr>
@@ -38,7 +38,7 @@ td,th{padding:8px;border:1px solid #ddd;text-align:left}th{background:#f0fdfa}</
 <tr><th>Supervisor Notes</th><td>${data.supervisor_notes || "—"}</td></tr>
 <tr><th>Signature</th><td>${signatureImg}</td></tr>
 </table>
-<p style="margin-top:24px;font-size:12px;color:#666">Generated ${new Date().toLocaleString()}</p>
+<p style="margin-top:24px;font-size:12px;color:#475569">Generated ${new Date().toLocaleString()}</p>
 </body></html>`;
 
   const win = window.open("", "_blank");

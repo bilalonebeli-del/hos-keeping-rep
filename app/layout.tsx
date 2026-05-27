@@ -29,7 +29,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#0f766e",
+  themeColor: "#0d9488",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -40,7 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>
-      <body className="min-h-screen font-sans">
+      <body className="min-h-screen bg-neutral-50 font-sans">
         <StickyHeader />
         <main className="min-h-[calc(100vh-3.5rem)]">{children}</main>
         <BottomNav />

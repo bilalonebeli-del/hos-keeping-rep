@@ -102,16 +102,16 @@ export function DashboardClient() {
   if (loading) {
     return (
       <div className="p-4 space-y-4">
-        <div className="h-10 bg-muted rounded animate-pulse" />
+        <div className="h-10 animate-pulse rounded bg-neutral-100" />
         <ChartSkeleton />
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-6xl p-4 pb-24 md:pb-8">
+    <div className="mx-auto max-w-6xl bg-neutral-50 p-4 pb-24 md:pb-8">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold">Manager Dashboard</h2>
+        <h2 className="text-xl font-semibold text-neutral-900">Manager Dashboard</h2>
         <Button variant="ghost" size="sm" onClick={handleLogout} className="min-h-touch">
           <LogOut className="h-4 w-4 mr-1" />
           Logout

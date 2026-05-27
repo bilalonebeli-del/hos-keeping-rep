@@ -33,7 +33,7 @@ export default function TabIdleTime({ reports, date }: Props) {
   }, [reports, date]);
 
   if (cards.length === 0) {
-    return <p className="text-muted-foreground text-center py-8">No reports for this date.</p>;
+    return <p className="text-neutral-600 text-center py-8">No reports for this date.</p>;
   }
 
   return (
@@ -42,7 +42,7 @@ export default function TabIdleTime({ reports, date }: Props) {
         <Card key={c.id}>
           <CardHeader className="pb-2">
             <CardTitle className="text-base">{c.staff}</CardTitle>
-            <p className="text-sm text-muted-foreground">{c.store}</p>
+            <p className="text-sm text-neutral-600">{c.store}</p>
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="flex justify-between text-sm">

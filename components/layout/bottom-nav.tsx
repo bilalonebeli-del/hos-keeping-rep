@@ -14,7 +14,7 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-50 border-t bg-background md:hidden safe-area-pb">
+    <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-neutral-200 bg-surface md:hidden safe-area-pb">
       <div className="grid grid-cols-2 h-14">
         {links.map(({ href, label, icon: Icon }) => {
           const active = pathname === href || (href !== "/" && pathname.startsWith(href));
@@ -24,7 +24,7 @@ export function BottomNav() {
               href={href}
               className={cn(
                 "flex flex-col items-center justify-center gap-0.5 min-h-touch text-sm font-medium transition-colors",
-                active ? "text-primary" : "text-muted-foreground"
+                active ? "text-primary-600" : "text-neutral-600"
               )}
             >
               <Icon className="h-5 w-5" />
