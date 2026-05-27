@@ -403,11 +403,11 @@ export function ReportForm() {
             </SheetDescription>
           </SheetHeader>
           <SheetFooter className="flex-col gap-3 mt-6 sm:flex-col">
-            <Button className="w-full min-h-touch" onClick={handlePrint}>
+            <Button type="button" className="w-full min-h-touch" onClick={handlePrint}>
               <Printer className="mr-2 h-5 w-5" />
               Print PDF
             </Button>
-            <Button variant="outline" className="w-full min-h-touch" onClick={handleNewReport}>
+            <Button type="button" variant="outline" className="w-full min-h-touch" onClick={handleNewReport}>
               <Plus className="mr-2 h-5 w-5" />
               New Report
             </Button>

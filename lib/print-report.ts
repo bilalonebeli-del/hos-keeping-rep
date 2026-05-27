@@ -12,7 +12,7 @@ type PrintData = ReportFormValues & {
 
 const LOGO_PATH = "/images/lagardere-logo.png";
 
-export function printReport(data: PrintData) {
+function buildReportHtml(data: PrintData) {
   const staffLabel = data.staff ? `${data.staff.name} - ${data.staff.employee_id}` : data.staff_id;
   const storeLabel = data.store ? `${data.store.name}` : data.store_id;
   const supervisorLabel = `${data.supervisor_name} - ${data.supervisor_employee_id}`;
@@ -26,7 +26,7 @@ export function printReport(data: PrintData) {
       ? `${window.location.origin}${LOGO_PATH}`
       : LOGO_PATH;
 
-  const html = `<!DOCTYPE html><html><head><title>Housekeeping Report</title>
+  return `<!DOCTYPE html><html><head><title>Housekeeping Report</title>
 <style>body{font-family:system-ui,sans-serif;padding:24px;max-width:600px;margin:0 auto}
 .header{text-align:center;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid #e2e8f0}
 .header img{max-width:280px;width:100%;height:auto;display:block;margin:0 auto}
@@ -53,22 +53,56 @@ td,th{padding:8px;border:1px solid #e2e8f0;text-align:left}th{background:#f0fdfa
 </table>
 <p style="margin-top:24px;font-size:12px;color:#475569">Generated ${new Date().toLocaleString()}</p>
 </body></html>`;
+}
 
-  const win = window.open("", "_blank");
-  if (!win) return;
-  win.document.write(html);
-  win.document.close();
+export function printReport(data: PrintData) {
+  const html = buildReportHtml(data);
 
-  const logo = win.document.querySelector("img");
-  const triggerPrint = () => {
-    win.focus();
-    win.print();
+  const iframe = document.createElement("iframe");
+  iframe.setAttribute("title", "Print report");
+  iframe.style.cssText =
+    "position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden";
+  document.body.appendChild(iframe);
+
+  const frameWindow = iframe.contentWindow;
+  const frameDoc = frameWindow?.document;
+  if (!frameWindow || !frameDoc) {
+    iframe.remove();
+    return;
+  }
+
+  let cleaned = false;
+  const cleanup = () => {
+    if (cleaned) return;
+    cleaned = true;
+    window.setTimeout(() => {
+      iframe.remove();
+      window.focus();
+    }, 500);
   };
 
+  frameDoc.open();
+  frameDoc.write(html);
+  frameDoc.close();
+
+  const runPrint = () => {
+    frameWindow.addEventListener("afterprint", cleanup, { once: true });
+    try {
+      frameWindow.focus();
+      frameWindow.print();
+    } catch {
+      cleanup();
+      return;
+    }
+    // Fallback if afterprint does not fire (some mobile browsers)
+    window.setTimeout(cleanup, 3000);
+  };
+
+  const logo = frameDoc.querySelector("img");
   if (logo && !(logo as HTMLImageElement).complete) {
-    logo.addEventListener("load", triggerPrint);
-    logo.addEventListener("error", triggerPrint);
+    logo.addEventListener("load", runPrint, { once: true });
+    logo.addEventListener("error", runPrint, { once: true });
   } else {
-    triggerPrint();
+    runPrint();
   }
 }
