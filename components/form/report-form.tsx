@@ -109,14 +109,44 @@ export function ReportForm() {
 
   useEffect(() => {
     const supabase = createClient();
-    Promise.all([
-      supabase.from("staff").select("*").order("name"),
-      supabase.from("stores").select("*").order("code"),
-    ]).then(([staffRes, storesRes]) => {
-      if (staffRes.data) setStaff(staffRes.data);
-      if (storesRes.data) setStores(storesRes.data);
-      setLoading(false);
-    });
+
+    const load = async () => {
+      try {
+        const { data: staffData, error: staffError } = await supabase
+          .from("staff")
+          .select("id,name,ltr")
+          .order("name");
+
+        const { data: storesData, error: storesError } = await supabase
+          .from("stores")
+          .select("id,code,name")
+          .order("name");
+
+        // Debug logs (requested)
+        console.log("STAFF FETCH:", staffData, "ERROR:", staffError);
+        console.log("STORES FETCH:", storesData, "ERROR:", storesError);
+
+        if (staffError) {
+          toast.error(`Staff load failed: ${staffError.message}`);
+        } else {
+          setStaff(staffData ?? []);
+        }
+
+        if (storesError) {
+          toast.error(`Stores load failed: ${storesError.message}`);
+        } else {
+          setStores(storesData ?? []);
+        }
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : "Unknown error";
+        toast.error(`Load failed: ${msg}`);
+        console.log("LOAD ERROR:", e);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    load();
   }, []);
 
   const syncPending = useCallback(async () => {
