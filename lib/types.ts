@@ -31,10 +31,13 @@ export type Report = {
   emergency_assistance: boolean;
   remarks: string | null;
   supervisor_id: string | null;
+  supervisor_name: string | null;
+  supervisor_employee_id: string | null;
+  supervisor_signature: string | null;
+  supervisor_notes: string | null;
   created_at: string;
   staff?: Staff;
   store?: Store;
-  supervisor?: Staff | null;
 };
 
 export const TASK_FIELDS = [

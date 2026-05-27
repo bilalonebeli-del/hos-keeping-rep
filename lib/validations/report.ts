@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+const ltrPattern = /^LTR-\d{4}$/i;
+
 export const reportSchema = z
   .object({
     staff_id: z.string().uuid("Select a staff member"),
@@ -17,7 +19,13 @@ export const reportSchema = z
     general_assistance: z.boolean(),
     emergency_assistance: z.boolean(),
     remarks: z.string().optional(),
-    supervisor_id: z.string().uuid().optional().or(z.literal("")),
+    supervisor_name: z.string().min(1, "Supervisor name is required"),
+    supervisor_employee_id: z
+      .string()
+      .min(1, "LTR number is required")
+      .regex(ltrPattern, "Use format LTR-xxxx (e.g. LTR-1444)"),
+    supervisor_signature: z.string().min(1, "Supervisor signature is required"),
+    supervisor_notes: z.string().optional(),
   })
   .refine((data) => data.time_out > data.time_in, {
     message: "Time out must be after time in",

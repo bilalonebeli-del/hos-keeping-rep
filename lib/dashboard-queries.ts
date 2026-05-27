@@ -4,7 +4,6 @@ import type { Report, Staff, Store } from "@/lib/types";
 export type ReportWithRelations = Report & {
   staff: Staff;
   store: Store;
-  supervisor: Staff | null;
 };
 
 export async function fetchReports(from: string, to: string): Promise<ReportWithRelations[]> {
@@ -14,8 +13,7 @@ export async function fetchReports(from: string, to: string): Promise<ReportWith
     .select(`
       *,
       staff:staff_id(id, name, ltr),
-      store:store_id(id, code, name),
-      supervisor:supervisor_id(id, name, ltr)
+      store:store_id(id, code, name)
     `)
     .gte("date", from)
     .lte("date", to)

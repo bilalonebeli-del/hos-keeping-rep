@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type SignatureCanvas from "react-signature-canvas";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -26,6 +27,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { OfflineBanner } from "@/components/form/offline-banner";
+import { SupervisorConfirmation } from "@/components/form/supervisor-confirmation";
 import { reportSchema, type ReportFormValues } from "@/lib/validations/report";
 import { createClient } from "@/lib/supabase";
 import { calcElapsedMinutes, todayInTZ } from "@/lib/timezone";
@@ -54,7 +56,10 @@ const defaultValues: ReportFormValues = {
   general_assistance: false,
   emergency_assistance: false,
   remarks: "",
-  supervisor_id: "",
+  supervisor_name: "",
+  supervisor_employee_id: "",
+  supervisor_signature: "",
+  supervisor_notes: "",
 };
 
 export function ReportForm() {
@@ -65,6 +70,7 @@ export function ReportForm() {
   const [successOpen, setSuccessOpen] = useState(false);
   const [lastSubmitted, setLastSubmitted] = useState<(ReportFormValues & { time_elapsed_minutes: number }) | null>(null);
   const [storeSearch, setStoreSearch] = useState("");
+  const signatureRef = useRef<SignatureCanvas>(null);
   const isOnline = useOnlineStatus();
 
   const {
@@ -134,28 +140,48 @@ export function ReportForm() {
     if (isOnline) syncPending();
   }, [isOnline, syncPending]);
 
+  const captureSignatureForSubmit = (): boolean => {
+    if (!signatureRef.current || signatureRef.current.isEmpty()) {
+      setValue("supervisor_signature", "", { shouldValidate: true });
+      toast.error("Supervisor signature is required");
+      return false;
+    }
+    setValue("supervisor_signature", signatureRef.current.toDataURL("image/png"), {
+      shouldValidate: true,
+    });
+    return true;
+  };
+
   const onSubmit = async (values: ReportFormValues) => {
+    if (!captureSignatureForSubmit()) return;
+
     setSubmitting(true);
     const elapsedMin = calcElapsedMinutes(values.time_in, values.time_out, values.date);
+    const signature = signatureRef.current?.toDataURL("image/png") ?? values.supervisor_signature;
+    const submitValues: ReportFormValues = {
+      ...values,
+      supervisor_signature: signature,
+      supervisor_employee_id: values.supervisor_employee_id.toUpperCase(),
+    };
 
     try {
       if (!isOnline) {
-        queueReport({ ...values, time_elapsed_minutes: elapsedMin });
-        setLastSubmitted({ ...values, time_elapsed_minutes: elapsedMin });
+        queueReport({ ...submitValues, time_elapsed_minutes: elapsedMin });
+        setLastSubmitted({ ...submitValues, time_elapsed_minutes: elapsedMin });
         setSuccessOpen(true);
         toast.info("Saved offline — will sync when online");
         return;
       }
 
-      await submitReport(values);
-      setLastSubmitted({ ...values, time_elapsed_minutes: elapsedMin });
+      await submitReport(submitValues);
+      setLastSubmitted({ ...submitValues, time_elapsed_minutes: elapsedMin });
       setSuccessOpen(true);
       toast.success("Report submitted");
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to submit";
       if (!isOnline || !navigator.onLine) {
-        queueReport({ ...values, time_elapsed_minutes: elapsedMin });
-        setLastSubmitted({ ...values, time_elapsed_minutes: elapsedMin });
+        queueReport({ ...submitValues, time_elapsed_minutes: elapsedMin });
+        setLastSubmitted({ ...submitValues, time_elapsed_minutes: elapsedMin });
         setSuccessOpen(true);
         toast.info("Saved offline — will sync when online");
       } else {
@@ -168,6 +194,7 @@ export function ReportForm() {
 
   const handleNewReport = () => {
     reset({ ...defaultValues, date: todayInTZ() });
+    signatureRef.current?.clear();
     setSuccessOpen(false);
     setLastSubmitted(null);
   };
@@ -176,8 +203,7 @@ export function ReportForm() {
     if (!lastSubmitted) return;
     const staffMember = staff.find((s) => s.id === lastSubmitted.staff_id);
     const store = stores.find((s) => s.id === lastSubmitted.store_id);
-    const supervisor = staff.find((s) => s.id === lastSubmitted.supervisor_id);
-    printReport({ ...lastSubmitted, staff: staffMember, store, supervisor });
+    printReport({ ...lastSubmitted, staff: staffMember, store });
   };
 
   if (loading) {
@@ -308,26 +334,12 @@ export function ReportForm() {
             <Textarea id="remarks" rows={4} placeholder="Optional notes..." {...register("remarks")} />
           </div>
 
-          {/* Supervisor */}
-          <div className="space-y-2">
-            <Label>Supervisor</Label>
-            <Select
-              value={watch("supervisor_id") || ""}
-              onValueChange={(v) => setValue("supervisor_id", v === "none" ? "" : v)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select supervisor (optional)" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">None</SelectItem>
-                {staff.map((s) => (
-                  <SelectItem key={s.id} value={s.id}>
-                    {s.name} - {s.ltr}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <SupervisorConfirmation
+            register={register}
+            errors={errors}
+            setValue={setValue}
+            signatureRef={signatureRef}
+          />
         </div>
 
         {/* Fixed submit */}

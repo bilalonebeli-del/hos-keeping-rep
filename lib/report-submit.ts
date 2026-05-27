@@ -23,7 +23,10 @@ export async function submitReport(values: ReportFormValues) {
     general_assistance: values.general_assistance,
     emergency_assistance: values.emergency_assistance,
     remarks: values.remarks || null,
-    supervisor_id: values.supervisor_id || null,
+    supervisor_name: values.supervisor_name,
+    supervisor_employee_id: values.supervisor_employee_id.toUpperCase(),
+    supervisor_signature: values.supervisor_signature,
+    supervisor_notes: values.supervisor_notes || null,
   };
 
   const { error } = await supabase.from("reports").insert(payload);
