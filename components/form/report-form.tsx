@@ -205,7 +205,9 @@ export function ReportForm() {
         return;
       }
 
-      await submitReport(submitValues);
+      const result = await submitReport(submitValues);
+      if (!result) return;
+
       setLastSubmitted({ ...submitValues, time_elapsed_minutes: elapsedMin });
       setSuccessOpen(true);
       toast.success("Report submitted");
