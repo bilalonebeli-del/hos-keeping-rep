@@ -172,6 +172,16 @@ export function ReportForm() {
     if (isOnline) syncPending();
   }, [isOnline, syncPending]);
 
+  const openPrintPdf = (
+    payload: ReportFormValues & { time_elapsed_minutes: number }
+  ) => {
+    const staffMember = staff.find((s) => s.id === payload.staff_id);
+    const store = stores.find((s) => s.id === payload.store_id);
+    window.setTimeout(() => {
+      printReport({ ...payload, staff: staffMember, store });
+    }, 400);
+  };
+
   const captureSignatureForSubmit = (): boolean => {
     if (!signatureRef.current || signatureRef.current.isEmpty()) {
       setValue("supervisor_signature", "", { shouldValidate: true });
@@ -197,10 +207,13 @@ export function ReportForm() {
     };
 
     try {
+      const submitted = { ...submitValues, time_elapsed_minutes: elapsedMin };
+
       if (!isOnline) {
-        queueReport({ ...submitValues, time_elapsed_minutes: elapsedMin });
-        setLastSubmitted({ ...submitValues, time_elapsed_minutes: elapsedMin });
+        queueReport(submitted);
+        setLastSubmitted(submitted);
         setSuccessOpen(true);
+        openPrintPdf(submitted);
         toast.info("Saved offline — will sync when online");
         return;
       }
@@ -208,15 +221,18 @@ export function ReportForm() {
       const result = await submitReport(submitValues);
       if (!result) return;
 
-      setLastSubmitted({ ...submitValues, time_elapsed_minutes: elapsedMin });
+      setLastSubmitted(submitted);
       setSuccessOpen(true);
+      openPrintPdf(submitted);
       toast.success("Report submitted");
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to submit";
       if (!isOnline || !navigator.onLine) {
-        queueReport({ ...submitValues, time_elapsed_minutes: elapsedMin });
-        setLastSubmitted({ ...submitValues, time_elapsed_minutes: elapsedMin });
+        const submitted = { ...submitValues, time_elapsed_minutes: elapsedMin };
+        queueReport(submitted);
+        setLastSubmitted(submitted);
         setSuccessOpen(true);
+        openPrintPdf(submitted);
         toast.info("Saved offline — will sync when online");
       } else {
         toast.error(message);
