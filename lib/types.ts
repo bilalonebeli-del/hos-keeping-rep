@@ -1,12 +1,11 @@
 export type Staff = {
   id: string;
   name: string;
-  ltr: string;
+  employee_id: string;
 };
 
 export type Store = {
   id: string;
-  code: string;
   name: string;
 };
 

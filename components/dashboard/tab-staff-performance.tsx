@@ -28,7 +28,7 @@ export default function TabStaffPerformance({ reports, staff, from, to }: Props)
 
       return {
         name: s.name,
-        ltr: s.ltr,
+        employee_id: s.employee_id,
         reports: totalReports,
         tasks: totalTasks,
         avgTasks,
@@ -59,7 +59,7 @@ export default function TabStaffPerformance({ reports, staff, from, to }: Props)
           <thead className="sticky top-0 bg-background z-10">
             <tr className="border-b bg-muted/50">
               <th className="p-3 text-left font-medium">Staff</th>
-              <th className="p-3 text-left font-medium">LTR</th>
+              <th className="p-3 text-left font-medium">Employee ID</th>
               <th className="p-3 text-right font-medium">Reports</th>
               <th className="p-3 text-right font-medium">Tasks</th>
               <th className="p-3 text-right font-medium">Avg Tasks</th>
@@ -69,9 +69,9 @@ export default function TabStaffPerformance({ reports, staff, from, to }: Props)
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr key={row.ltr} className="border-b">
+              <tr key={row.employee_id} className="border-b">
                 <td className="p-3">{row.name}</td>
-                <td className="p-3">{row.ltr}</td>
+                <td className="p-3">{row.employee_id}</td>
                 <td className="p-3 text-right">{row.reports}</td>
                 <td className="p-3 text-right">{row.tasks}</td>
                 <td className="p-3 text-right">{row.avgTasks}</td>

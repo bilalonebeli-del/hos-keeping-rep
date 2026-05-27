@@ -37,8 +37,7 @@ export default function TabDailyCompletion({ reports, stores, date }: Props) {
       {cards.map(({ store, reportCount, totalTasks, pct }) => (
         <Card key={store.id}>
           <CardHeader className="pb-2">
-            <CardTitle className="text-base">{store.code}</CardTitle>
-            <p className="text-sm text-muted-foreground line-clamp-2">{store.name}</p>
+            <CardTitle className="text-base line-clamp-2">{store.name}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">

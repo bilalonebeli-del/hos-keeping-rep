@@ -29,7 +29,7 @@ export default function TabDailyStaff({ reports, staffId, date }: Props) {
           <CardHeader className="pb-2">
             <CardTitle className="text-base">{r.staff.name}</CardTitle>
             <p className="text-sm text-muted-foreground">
-              {r.store.code} · {r.shift} · {r.time_in.slice(11, 16)}–{r.time_out.slice(11, 16)}
+              {r.store.name} · {r.shift} · {r.time_in.slice(11, 16)}–{r.time_out.slice(11, 16)}
             </p>
           </CardHeader>
           <CardContent className="space-y-2">

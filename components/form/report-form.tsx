@@ -102,9 +102,7 @@ export function ReportForm() {
   const filteredStores = useMemo(() => {
     const q = storeSearch.toLowerCase();
     if (!q) return stores;
-    return stores.filter(
-      (s) => s.code.toLowerCase().includes(q) || s.name.toLowerCase().includes(q)
-    );
+    return stores.filter((s) => s.name.toLowerCase().includes(q));
   }, [stores, storeSearch]);
 
   useEffect(() => {
@@ -114,12 +112,12 @@ export function ReportForm() {
       try {
         const { data: staffData, error: staffError } = await supabase
           .from("staff")
-          .select("id,name,ltr")
+          .select("id,name,employee_id")
           .order("name");
 
         const { data: storesData, error: storesError } = await supabase
           .from("stores")
-          .select("id,code,name")
+          .select("id,name")
           .order("name");
 
         // Debug logs (requested)
@@ -261,7 +259,7 @@ export function ReportForm() {
               <SelectContent>
                 {staff.map((s) => (
                   <SelectItem key={s.id} value={s.id}>
-                    {s.name} - {s.ltr}
+                    {s.name} - {s.employee_id}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -303,7 +301,7 @@ export function ReportForm() {
             <Label>Store</Label>
             <Input
               type="search"
-              placeholder="Search store by code or name..."
+              placeholder="Search store by name..."
               value={storeSearch}
               onChange={(e) => setStoreSearch(e.target.value)}
               className="mb-2"
@@ -315,7 +313,7 @@ export function ReportForm() {
               <SelectContent>
                 {filteredStores.map((s) => (
                   <SelectItem key={s.id} value={s.id}>
-                    {s.code} - {s.name}
+                    {s.name}
                   </SelectItem>
                 ))}
               </SelectContent>

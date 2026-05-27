@@ -25,7 +25,7 @@ export default function TabTimePerStore({ reports, date }: Props) {
     const byStore = new Map<string, Record<string, number>>();
 
     for (const report of dayReports) {
-      const storeName = `${report.store.code}`;
+      const storeName = report.store.name;
       if (!byStore.has(storeName)) {
         byStore.set(storeName, Object.fromEntries(TASK_FIELDS.map((t) => [t.label, 0])));
       }

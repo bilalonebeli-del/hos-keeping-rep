@@ -182,7 +182,7 @@ export function DashboardClient() {
                   <SelectItem value="all">All staff</SelectItem>
                   {staff.map((s) => (
                     <SelectItem key={s.id} value={s.id}>
-                      {s.name} - {s.ltr}
+                      {s.name} - {s.employee_id}
                     </SelectItem>
                   ))}
                 </SelectContent>

@@ -12,8 +12,8 @@ export async function fetchReports(from: string, to: string): Promise<ReportWith
     .from("reports")
     .select(`
       *,
-      staff:staff_id(id, name, ltr),
-      store:store_id(id, code, name)
+      staff:staff_id(id, name, employee_id),
+      store:store_id(id, name)
     `)
     .gte("date", from)
     .lte("date", to)
@@ -26,8 +26,8 @@ export async function fetchReports(from: string, to: string): Promise<ReportWith
 export async function fetchStaffAndStores() {
   const supabase = createClient();
   const [staffRes, storesRes] = await Promise.all([
-    supabase.from("staff").select("*").order("name"),
-    supabase.from("stores").select("*").order("code"),
+    supabase.from("staff").select("id,name,employee_id").order("name"),
+    supabase.from("stores").select("id,name").order("name"),
   ]);
   return {
     staff: (staffRes.data ?? []) as Staff[],

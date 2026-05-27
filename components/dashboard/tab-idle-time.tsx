@@ -22,7 +22,7 @@ export default function TabIdleTime({ reports, date }: Props) {
         return {
           id: r.id,
           staff: r.staff.name,
-          store: r.store.code,
+          store: r.store.name,
           elapsed: r.time_elapsed_minutes,
           taskTime,
           tasks,

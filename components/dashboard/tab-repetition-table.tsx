@@ -16,19 +16,19 @@ export default function TabRepetitionTable({ reports, date }: Props) {
     const byStore = new Map<string, ReportWithRelations[]>();
 
     for (const r of dayReports) {
-      const key = r.store.code;
+      const key = r.store_id;
       if (!byStore.has(key)) byStore.set(key, []);
       byStore.get(key)!.push(r);
     }
 
-    return Array.from(byStore.entries()).map(([code, storeReports]) => {
+    return Array.from(byStore.entries()).map(([storeId, storeReports]) => {
       const taskStatus = Object.fromEntries(
         TASK_FIELDS.map((t) => [
           t.key,
           storeReports.some((r) => r[t.key]),
         ])
       );
-      return { code, name: storeReports[0].store.name, taskStatus };
+      return { storeId, name: storeReports[0].store.name, taskStatus };
     });
   }, [reports, date]);
 
@@ -51,10 +51,9 @@ export default function TabRepetitionTable({ reports, date }: Props) {
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.code} className="border-b">
+            <tr key={row.storeId} className="border-b">
               <td className="sticky left-0 bg-background p-3 font-medium">
-                {row.code}
-                <span className="block text-xs text-muted-foreground truncate max-w-[120px]">{row.name}</span>
+                <span className="block truncate max-w-[200px]">{row.name}</span>
               </td>
               {TASK_FIELDS.map((t) => (
                 <td key={t.key} className="p-3 text-center">

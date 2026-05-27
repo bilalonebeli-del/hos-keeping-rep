@@ -11,8 +11,8 @@ type PrintData = ReportFormValues & {
 };
 
 export function printReport(data: PrintData) {
-  const staffLabel = data.staff ? `${data.staff.name} - ${data.staff.ltr}` : data.staff_id;
-  const storeLabel = data.store ? `${data.store.code} ${data.store.name}` : data.store_id;
+  const staffLabel = data.staff ? `${data.staff.name} - ${data.staff.employee_id}` : data.staff_id;
+  const storeLabel = data.store ? `${data.store.name}` : data.store_id;
   const supervisorLabel = `${data.supervisor_name} - ${data.supervisor_employee_id}`;
   const tasks = TASK_FIELDS.filter((t) => data[t.key]).map((t) => t.label).join(", ") || "None";
   const signatureImg = data.supervisor_signature
