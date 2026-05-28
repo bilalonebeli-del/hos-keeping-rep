@@ -170,7 +170,7 @@ function downloadCsv(rows: StaffStat[], filename: string) {
 
 export default function ManagerPage() {
   const defaults = monthRange();
-  const [logged, setLogged] = useState(false);
+  const [ok, setOk] = useState(false);
   const [pw, setPw] = useState("");
   const [rangeStart, setRangeStart] = useState(defaults.start);
   const [rangeEnd, setRangeEnd] = useState(defaults.end);
@@ -181,8 +181,34 @@ export default function ManagerPage() {
   const [storesCleaned, setStoresCleaned] = useState(0);
 
   useEffect(() => {
-    if (localStorage.getItem("mgr") === "1") setLogged(true);
+    const session = localStorage.getItem("manager_session");
+    if (session) {
+      try {
+        const { time } = JSON.parse(session) as { time: number };
+        const twoHours = 2 * 60 * 60 * 1000;
+        if (Date.now() - time < twoHours) {
+          setOk(true);
+        } else {
+          localStorage.removeItem("manager_session");
+        }
+      } catch {
+        localStorage.removeItem("manager_session");
+      }
+    }
   }, []);
+
+  const handleLogin = () => {
+    if (pw === MANAGER_PASSWORD) {
+      localStorage.setItem("manager_session", JSON.stringify({ time: Date.now() }));
+      localStorage.removeItem("mgr");
+      setOk(true);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("manager_session");
+    setOk(false);
+  };
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -219,8 +245,8 @@ export default function ManagerPage() {
   }, [rangeStart, rangeEnd]);
 
   useEffect(() => {
-    if (logged) loadData();
-  }, [logged, loadData]);
+    if (ok) loadData();
+  }, [ok, loadData]);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -258,7 +284,7 @@ export default function ManagerPage() {
     return mi >= 0 && mi < 12 ? `${months[mi]} ${y}` : `${rangeStart} – ${rangeEnd}`;
   }, [rangeStart, rangeEnd]);
 
-  if (!logged) {
+  if (!ok) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
         <div className="w-full max-w-sm rounded-xl bg-white p-8 shadow-lg">
@@ -271,20 +297,12 @@ export default function ManagerPage() {
             placeholder="Enter password"
             className="mb-3 w-full rounded-lg border border-slate-300 px-3 py-2"
             onKeyDown={(e) => {
-              if (e.key === "Enter" && pw === MANAGER_PASSWORD) {
-                localStorage.setItem("mgr", "1");
-                setLogged(true);
-              }
+              if (e.key === "Enter") handleLogin();
             }}
           />
           <button
             type="button"
-            onClick={() => {
-              if (pw === MANAGER_PASSWORD) {
-                localStorage.setItem("mgr", "1");
-                setLogged(true);
-              }
-            }}
+            onClick={handleLogin}
             className="w-full rounded-lg bg-[#0d9488] px-4 py-2 font-medium text-white hover:bg-[#0f766e]"
           >
             Login
@@ -305,6 +323,13 @@ export default function ManagerPage() {
             <p className="mt-1 text-sm text-slate-500">Task completion by staff</p>
           </div>
           <div className="flex flex-wrap items-end gap-3">
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+            >
+              Logout
+            </button>
             <label className="text-sm text-slate-600">
               Start
               <input
