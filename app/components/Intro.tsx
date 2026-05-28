@@ -9,6 +9,42 @@ type IntroProps = {
   exiting?: boolean;
 };
 
+function SparkleBroomIcon() {
+  return (
+    <svg
+      viewBox="0 0 64 64"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-16 w-16 text-white"
+      aria-hidden
+    >
+      <path
+        d="M32 8l2.5 7.6H42l-6 4.4 2.3 7-6.8-4.9-6.8 4.9 2.3-7-6-4.4h7.5L32 8z"
+        fill="currentColor"
+        opacity="0.9"
+      />
+      <path
+        d="M28 26h8v6c0 8-3 14-8 18-5-4-8-10-8-18v-6z"
+        fill="currentColor"
+        opacity="0.95"
+      />
+      <path
+        d="M18 48c4 3 9 5 14 5s10-2 14-5"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M22 34h20"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        opacity="0.5"
+      />
+    </svg>
+  );
+}
+
 export function Intro({ exiting = false }: IntroProps) {
   return (
     <div
@@ -31,11 +67,9 @@ export function Intro({ exiting = false }: IntroProps) {
         </span>
 
         <div className="flex flex-col items-center text-center">
-          <img
-            src="/logo.png"
-            className="animate-intro-logo-pulse mx-auto mb-4 h-24 w-24 drop-shadow-xl"
-            alt="Lagardère Travel Retail logo"
-          />
+          <div className="animate-intro-logo-pulse mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/20">
+            <SparkleBroomIcon />
+          </div>
 
           <h1 className="text-3xl font-bold tracking-wider text-white sm:text-4xl">
             Housekeeping Pro

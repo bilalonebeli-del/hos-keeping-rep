@@ -16,8 +16,7 @@ function Badge({
     <div
       className={cn(
         "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors",
-        variant === "default" &&
-          "border-transparent bg-gradient-to-r from-teal-600 to-cyan-500 text-white",
+        variant === "default" && "border-transparent bg-primary-600 text-white",
         variant === "secondary" && "border-transparent bg-neutral-100 text-neutral-800",
         variant === "outline" && "border-neutral-200 text-neutral-700",
         variant === "success" && "border-transparent bg-success-50 text-success",
