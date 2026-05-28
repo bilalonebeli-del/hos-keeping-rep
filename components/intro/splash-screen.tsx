@@ -52,8 +52,8 @@ export function SplashScreen({
           onClick={onStart}
           disabled={!buttonEnabled}
           className={cn(
-            "mt-10 w-full max-w-xs rounded-xl bg-primary-600 px-8 py-4 text-lg font-semibold text-white shadow-sm transition-all",
-            "hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2",
+            "mt-10 w-full max-w-xs rounded-xl bg-gradient-to-r from-teal-600 to-cyan-500 px-8 py-4 text-lg font-semibold text-white shadow-sm transition-all",
+            "hover:from-teal-700 hover:to-cyan-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2",
             "disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none",
             buttonPulse && buttonEnabled && "animate-intro-pulse"
           )}

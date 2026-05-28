@@ -300,7 +300,7 @@ export function ReportForm() {
                   className={cn(
                     "min-h-touch rounded-lg border-2 px-2 py-3 text-base font-medium transition-colors",
                     shift === s
-                      ? "border-primary-600 bg-primary-600 text-white"
+                      ? "border-teal-600 bg-gradient-to-r from-teal-600 to-cyan-500 text-white shadow-sm"
                       : "border-neutral-200 bg-surface hover:bg-neutral-50"
                   )}
                 >

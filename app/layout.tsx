@@ -26,7 +26,8 @@ export const metadata: Metadata = {
     title: "HK Reports",
   },
   icons: {
-    apple: "/icons/apple-touch-icon.svg",
+    icon: "/logo.png",
+    apple: "/logo.png",
   },
 };
 
@@ -41,7 +42,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={inter.className}>
       <head>
-        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.svg" />
+        <link rel="icon" href="/logo.png" />
+        <link rel="apple-touch-icon" href="/logo.png" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>

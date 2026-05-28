@@ -15,7 +15,7 @@ type PrintData = ReportFormValues & {
   store?: Store;
 };
 
-const LOGO_PATH = "/images/lagardere-logo.png";
+const LOGO_PATH = "/logo.png";
 
 function buildReportHtml(data: PrintData) {
   const staffLabel = data.staff ? `${data.staff.name} - ${data.staff.employee_id}` : data.staff_id;
