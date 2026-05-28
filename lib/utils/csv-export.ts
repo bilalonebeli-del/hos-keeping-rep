@@ -1,3 +1,8 @@
+// Housekeeping Pro
+// Author: [Bilal]
+// Developed: May 2026
+// Stack: Next.js 14 + Supabase
+
 export function downloadCSV(rows: Record<string, unknown>[], filename: string) {
   if (rows.length === 0) return;
 

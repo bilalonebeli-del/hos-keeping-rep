@@ -1,3 +1,8 @@
+// Housekeeping Pro
+// Author: [Bilal]
+// Developed: May 2026
+// Stack: Next.js 14 + Supabase
+
 export function StickyHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-neutral-200 bg-surface shadow-sm">

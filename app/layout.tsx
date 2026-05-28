@@ -1,3 +1,8 @@
+// Housekeeping Pro
+// Author: [Bilal]
+// Developed: May 2026
+// Stack: Next.js 14 + Supabase
+
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "sonner";

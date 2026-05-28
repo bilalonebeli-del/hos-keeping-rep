@@ -1,3 +1,8 @@
+// Housekeeping Pro
+// Author: [Bilal]
+// Developed: May 2026
+// Stack: Next.js 14 + Supabase
+
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase-server";
 import { DashboardClient } from "@/components/dashboard/dashboard-client";

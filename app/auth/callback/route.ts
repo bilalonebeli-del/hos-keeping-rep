@@ -1,3 +1,8 @@
+// Housekeeping Pro
+// Author: [Bilal]
+// Developed: May 2026
+// Stack: Next.js 14 + Supabase
+
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 

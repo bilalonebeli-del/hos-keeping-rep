@@ -1,3 +1,8 @@
+// Housekeeping Pro
+// Author: [Bilal]
+// Developed: May 2026
+// Stack: Next.js 14 + Supabase
+
 import { createClient } from "@/lib/supabase";
 import type { Report, Staff, Store } from "@/lib/types";
 

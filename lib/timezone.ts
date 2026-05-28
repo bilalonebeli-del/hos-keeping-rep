@@ -1,3 +1,8 @@
+// Housekeeping Pro
+// Author: [Bilal]
+// Developed: May 2026
+// Stack: Next.js 14 + Supabase
+
 import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
 
 export const TZ = "Asia/Dubai";

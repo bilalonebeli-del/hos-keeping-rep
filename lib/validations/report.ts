@@ -1,3 +1,8 @@
+// Housekeeping Pro
+// Author: [Bilal]
+// Developed: May 2026
+// Stack: Next.js 14 + Supabase
+
 import { z } from "zod";
 
 const ltrPattern = /^LTR-\d{4}$/i;
