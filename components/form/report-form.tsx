@@ -34,6 +34,7 @@ import { queueReport, getPending, removePending } from "@/lib/offline-queue";
 import { useOnlineStatus } from "@/hooks/use-online-status";
 import { printReport } from "@/lib/print-report";
 import { TASK_FIELDS, type Staff, type Store, type Shift } from "@/lib/types";
+import { CATALOG_STAFF, CATALOG_STORES } from "@/lib/catalog";
 import { cn } from "@/lib/utils";
 
 const SHIFTS: Shift[] = ["Morning", "Afternoon", "Night"];
@@ -64,6 +65,7 @@ export function ReportForm() {
   const [staff, setStaff] = useState<Staff[]>([]);
   const [stores, setStores] = useState<Store[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const [printing, setPrinting] = useState(false);
@@ -88,6 +90,8 @@ export function ReportForm() {
   const timeOut = watch("time_out");
   const date = watch("date");
   const shift = watch("shift");
+  const selectedStaff = watch("staff_id");
+  const selectedStore = watch("store_id");
 
   const elapsed = useMemo(() => {
     if (!timeIn || !timeOut || !date) return 0;
@@ -101,7 +105,11 @@ export function ReportForm() {
   const filteredStores = useMemo(() => {
     const q = storeSearch.toLowerCase();
     if (!q) return stores;
-    return stores.filter((s) => s.name.toLowerCase().includes(q));
+    return stores.filter(
+      (s) =>
+        s.name.toLowerCase().includes(q) ||
+        (s.code ?? "").toLowerCase().includes(q)
+    );
   }, [stores, storeSearch]);
 
   useEffect(() => {
@@ -109,38 +117,73 @@ export function ReportForm() {
 
     const load = async () => {
       try {
+        setLoadError("");
+
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+        const usingPlaceholder =
+          !supabaseUrl || supabaseUrl.includes("placeholder");
+
+        if (usingPlaceholder) {
+          setStaff(CATALOG_STAFF);
+          setStores(CATALOG_STORES);
+          setLoadError(
+            "Using built-in staff and store lists. Add your real Supabase credentials to .env.local so reports can be saved."
+          );
+          return;
+        }
+
         const { data: staffData, error: staffError } = await supabase
           .from("staff")
-          .select("id,name")
+          .select("*")
           .order("name");
 
         const { data: storesData, error: storesError } = await supabase
           .from("stores")
-          .select("id,name")
+          .select("*")
           .order("name");
 
-        // Debug logs (requested)
         console.log("STAFF FETCH:", staffData, "ERROR:", staffError);
         console.log("STORES FETCH:", storesData, "ERROR:", storesError);
 
         if (staffError) {
-          toast.error(`Staff load failed: ${staffError.message}`);
-        } else {
-          const normalizedStaff = (staffData ?? []).map((s) => ({
-            ...s,
-            employee_id: "",
-          }));
-          setStaff(normalizedStaff);
+          throw new Error(`Staff load failed: ${staffError.message}`);
+        }
+        if (storesError) {
+          throw new Error(`Stores load failed: ${storesError.message}`);
         }
 
-        if (storesError) {
-          toast.error(`Stores load failed: ${storesError.message}`);
-        } else {
-          setStores(storesData ?? []);
+        const normalizedStaff =
+          (staffData ?? []).length > 0
+            ? (staffData ?? []).map((s) => ({
+                id: String(s.id),
+                name: String(s.name),
+                employee_id: String(s.ltr ?? s.employee_id ?? s.id),
+              }))
+            : CATALOG_STAFF;
+
+        const nextStores =
+          (storesData ?? []).length > 0
+            ? (storesData ?? []).map((s) => ({
+                id: String(s.id),
+                name: String(s.name),
+                code: s.code ? String(s.code) : String(s.id),
+              }))
+            : CATALOG_STORES;
+
+        setStaff(normalizedStaff);
+        setStores(nextStores);
+
+        if ((staffData ?? []).length === 0 || (storesData ?? []).length === 0) {
+          setLoadError(
+            "Loaded built-in staff/store lists. Re-run supabase/migrations/001_initial.sql in Supabase if submit fails."
+          );
         }
       } catch (e) {
+        setStaff(CATALOG_STAFF);
+        setStores(CATALOG_STORES);
         const msg = e instanceof Error ? e.message : "Unknown error";
-        toast.error(`Load failed: ${msg}`);
+        setLoadError(`Could not reach Supabase (${msg}). Showing built-in lists.`);
+        toast.error(msg);
         console.log("LOAD ERROR:", e);
       } finally {
         setLoading(false);
@@ -275,6 +318,11 @@ export function ReportForm() {
   return (
     <>
       <OfflineBanner />
+      {loadError && (
+        <div className="mx-4 mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {loadError}
+        </div>
+      )}
       <form onSubmit={handleSubmit(onSubmit)} className="pb-32 md:pb-8">
         <div className="mx-auto max-w-4xl space-y-5 p-4">
           {/* Staff */}
@@ -282,14 +330,15 @@ export function ReportForm() {
             <Label htmlFor="staff_id">Staff Member</Label>
             <select
               id="staff_id"
-              value={watch("staff_id")}
+              value={selectedStaff}
               onChange={(e) => setValue("staff_id", e.target.value, { shouldValidate: true })}
-              className="min-h-touch w-full rounded-lg border border-neutral-300 bg-surface px-3 py-3 text-base text-neutral-900 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              required
+              className="min-h-touch w-full rounded-xl border-2 border-teal-500 bg-white px-3 py-3 text-base text-neutral-900 shadow-sm focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500"
             >
               <option value="">Select staff...</option>
               {staff.map((s) => (
                 <option key={s.id} value={s.id}>
-                  {s.name}
+                  {s.name} - {s.id}
                 </option>
               ))}
             </select>
@@ -337,14 +386,15 @@ export function ReportForm() {
             />
             <select
               id="store_id"
-              value={watch("store_id")}
+              value={selectedStore}
               onChange={(e) => setValue("store_id", e.target.value, { shouldValidate: true })}
-              className="min-h-touch w-full rounded-lg border border-neutral-300 bg-surface px-3 py-3 text-base text-neutral-900 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              required
+              className="min-h-touch w-full rounded-xl border-2 border-teal-500 bg-white px-3 py-3 text-base text-neutral-900 shadow-sm focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500"
             >
               <option value="">Select store...</option>
               {filteredStores.map((s) => (
                 <option key={s.id} value={s.id}>
-                  {s.name}
+                  {s.name} - {s.id}
                 </option>
               ))}
             </select>

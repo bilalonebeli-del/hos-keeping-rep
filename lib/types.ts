@@ -12,6 +12,7 @@ export type Staff = {
 export type Store = {
   id: string;
   name: string;
+  code?: string;
 };
 
 export type Shift = "Morning" | "Afternoon" | "Night";

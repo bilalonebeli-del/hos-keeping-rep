@@ -9,8 +9,8 @@ const ltrPattern = /^LTR-\d{4}$/i;
 
 export const reportSchema = z
   .object({
-    staff_id: z.string().uuid("Select a staff member"),
-    store_id: z.string().uuid("Select a store"),
+    staff_id: z.string().min(1, "Select a staff member"),
+    store_id: z.string().min(1, "Select a store"),
     date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date"),
     shift: z.enum(["Morning", "Afternoon", "Night"]),
     time_in: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time in"),
