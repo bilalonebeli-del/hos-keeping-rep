@@ -17,6 +17,14 @@ type PrintData = ReportFormValues & {
 
 const LOGO_PATH = "/images/lagardere-logo.png";
 
+function isMobileDevice() {
+  if (typeof window === "undefined") return false;
+  return (
+    /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ||
+    window.innerWidth < 768
+  );
+}
+
 function buildReportHtml(data: PrintData) {
   const staffLabel = data.staff ? `${data.staff.name} - ${data.staff.employee_id}` : data.staff_id;
   const storeLabel = data.store ? `${data.store.name}` : data.store_id;
@@ -31,7 +39,7 @@ function buildReportHtml(data: PrintData) {
       ? `${window.location.origin}${LOGO_PATH}`
       : LOGO_PATH;
 
-  return `<!DOCTYPE html><html><head><title>Housekeeping Report</title>
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Housekeeping Report</title>
 <style>body{font-family:system-ui,sans-serif;padding:24px;max-width:600px;margin:0 auto}
 .header{text-align:center;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid #e2e8f0}
 .header img{max-width:280px;width:100%;height:auto;display:block;margin:0 auto}
@@ -60,30 +68,41 @@ td,th{padding:8px;border:1px solid #e2e8f0;text-align:left}th{background:#f0fdfa
 </body></html>`;
 }
 
-export function printReport(data: PrintData) {
-  const html = buildReportHtml(data);
+function openReportInNewTab(html: string): boolean {
+  const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
 
+  const link = document.createElement("a");
+  link.href = url;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  window.setTimeout(() => URL.revokeObjectURL(url), 120_000);
+  return true;
+}
+
+function printWithIframe(html: string) {
   const iframe = document.createElement("iframe");
   iframe.setAttribute("title", "Print report");
   iframe.style.cssText =
-    "position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden";
+    "position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden;pointer-events:none";
   document.body.appendChild(iframe);
 
   const frameWindow = iframe.contentWindow;
   const frameDoc = frameWindow?.document;
   if (!frameWindow || !frameDoc) {
     iframe.remove();
-    return;
+    return false;
   }
 
   let cleaned = false;
   const cleanup = () => {
     if (cleaned) return;
     cleaned = true;
-    window.setTimeout(() => {
-      iframe.remove();
-      window.focus();
-    }, 500);
+    window.setTimeout(() => iframe.remove(), 500);
   };
 
   frameDoc.open();
@@ -97,10 +116,10 @@ export function printReport(data: PrintData) {
       frameWindow.print();
     } catch {
       cleanup();
-      return;
+      return false;
     }
-    // Fallback if afterprint does not fire (some mobile browsers)
     window.setTimeout(cleanup, 3000);
+    return true;
   };
 
   const logo = frameDoc.querySelector("img");
@@ -110,4 +129,16 @@ export function printReport(data: PrintData) {
   } else {
     runPrint();
   }
+  return true;
+}
+
+/** @returns mode used: mobile tab open vs desktop print */
+export function printReport(data: PrintData): "mobile" | "desktop" | false {
+  const html = buildReportHtml(data);
+
+  if (isMobileDevice()) {
+    return openReportInNewTab(html) ? "mobile" : false;
+  }
+
+  return printWithIframe(html) ? "desktop" : false;
 }

@@ -73,6 +73,7 @@ export function ReportForm() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
+  const [printing, setPrinting] = useState(false);
   const [lastSubmitted, setLastSubmitted] = useState<(ReportFormValues & { time_elapsed_minutes: number }) | null>(null);
   const [storeSearch, setStoreSearch] = useState("");
   const signatureRef = useRef<SignatureCanvas>(null);
@@ -242,10 +243,30 @@ export function ReportForm() {
   };
 
   const handlePrint = () => {
-    if (!lastSubmitted) return;
+    if (!lastSubmitted) {
+      toast.error("Report not ready. Please submit again.");
+      return;
+    }
+    if (printing) return;
+
+    setPrinting(true);
     const staffMember = staff.find((s) => s.id === lastSubmitted.staff_id);
     const store = stores.find((s) => s.id === lastSubmitted.store_id);
-    printReport({ ...lastSubmitted, staff: staffMember, store });
+
+    try {
+      const mode = printReport({ ...lastSubmitted, staff: staffMember, store });
+      if (!mode) {
+        toast.error("Could not open report. Allow pop-ups and try again.");
+        return;
+      }
+      if (mode === "mobile") {
+        toast.success("Report opened — use Share → Print or Save to PDF", { duration: 5000 });
+      }
+    } catch {
+      toast.error("Could not open report. Try again.");
+    } finally {
+      setPrinting(false);
+    }
   };
 
   if (loading) {
@@ -400,19 +421,42 @@ export function ReportForm() {
       </form>
 
       <Sheet open={successOpen} onOpenChange={setSuccessOpen}>
-        <SheetContent side="bottom" className="rounded-t-xl">
-          <SheetHeader>
+        <SheetContent
+          side="bottom"
+          className="rounded-t-xl pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] pt-8"
+          onInteractOutside={(e) => e.preventDefault()}
+        >
+          <SheetHeader className="pr-10">
             <SheetTitle className="text-center text-2xl text-primary-600">Submitted!</SheetTitle>
             <SheetDescription className="text-center">
               Your housekeeping report has been saved successfully.
             </SheetDescription>
           </SheetHeader>
-          <SheetFooter className="flex-col gap-3 mt-6 sm:flex-col">
-            <Button type="button" className="w-full min-h-touch" onClick={handlePrint}>
-              <Printer className="mr-2 h-5 w-5" />
-              Print PDF
+          <SheetFooter className="relative z-10 mt-6 flex flex-col gap-3 sm:flex-col">
+            <Button
+              type="button"
+              className="w-full min-h-touch touch-manipulation"
+              onClick={handlePrint}
+              disabled={printing || !lastSubmitted}
+            >
+              {printing ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Opening…
+                </>
+              ) : (
+                <>
+                  <Printer className="mr-2 h-5 w-5" />
+                  View / Save PDF
+                </>
+              )}
             </Button>
-            <Button type="button" variant="outline" className="w-full min-h-touch" onClick={handleNewReport}>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full min-h-touch touch-manipulation"
+              onClick={handleNewReport}
+            >
               <Plus className="mr-2 h-5 w-5" />
               New Report
             </Button>
