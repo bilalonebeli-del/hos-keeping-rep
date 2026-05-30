@@ -17,13 +17,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Sheet,
   SheetContent,
   SheetDescription,
@@ -286,19 +279,20 @@ export function ReportForm() {
         <div className="mx-auto max-w-4xl space-y-5 p-4">
           {/* Staff */}
           <div className="space-y-2">
-            <Label>Staff Member</Label>
-            <Select value={watch("staff_id")} onValueChange={(v) => setValue("staff_id", v, { shouldValidate: true })}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select staff" />
-              </SelectTrigger>
-              <SelectContent>
-                {staff.map((s) => (
-                  <SelectItem key={s.id} value={s.id}>
-                    {s.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Label htmlFor="staff_id">Staff Member</Label>
+            <select
+              id="staff_id"
+              value={watch("staff_id")}
+              onChange={(e) => setValue("staff_id", e.target.value, { shouldValidate: true })}
+              className="min-h-touch w-full rounded-lg border border-neutral-300 bg-surface px-3 py-3 text-base text-neutral-900 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            >
+              <option value="">Select staff...</option>
+              {staff.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
             {errors.staff_id && <p className="text-sm text-error">{errors.staff_id.message}</p>}
           </div>
 
@@ -333,7 +327,7 @@ export function ReportForm() {
 
           {/* Store searchable */}
           <div className="space-y-2">
-            <Label>Store</Label>
+            <Label htmlFor="store_id">Store</Label>
             <Input
               type="search"
               placeholder="Search store by name..."
@@ -341,18 +335,19 @@ export function ReportForm() {
               onChange={(e) => setStoreSearch(e.target.value)}
               className="mb-2"
             />
-            <Select value={watch("store_id")} onValueChange={(v) => setValue("store_id", v, { shouldValidate: true })}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select store" />
-              </SelectTrigger>
-              <SelectContent>
-                {filteredStores.map((s) => (
-                  <SelectItem key={s.id} value={s.id}>
-                    {s.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <select
+              id="store_id"
+              value={watch("store_id")}
+              onChange={(e) => setValue("store_id", e.target.value, { shouldValidate: true })}
+              className="min-h-touch w-full rounded-lg border border-neutral-300 bg-surface px-3 py-3 text-base text-neutral-900 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            >
+              <option value="">Select store...</option>
+              {filteredStores.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
             {errors.store_id && <p className="text-sm text-error">{errors.store_id.message}</p>}
           </div>
 
